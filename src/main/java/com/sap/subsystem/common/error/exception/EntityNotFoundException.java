@@ -1,4 +1,4 @@
-package com.sap.subsystem.vcs_repository.error.exception;
+package com.sap.subsystem.common.error.exception;
 
 public class EntityNotFoundException extends RuntimeException{
     private static final String ENTITY_NOT_FOUND_EXCEPTION = "Resource not found";

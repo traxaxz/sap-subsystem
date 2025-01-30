@@ -4,8 +4,8 @@ import com.sap.subsystem.vcs_repository.domain.dto.VcsRepositoryDto;
 import com.sap.subsystem.vcs_repository.domain.dto.VcsRepositoryView;
 import com.sap.subsystem.vcs_repository.domain.mapping.VcsRepositoryMapper;
 import com.sap.subsystem.vcs_repository.domain.model.VcsRepository;
-import com.sap.subsystem.vcs_repository.error.exception.DuplicateEntityException;
-import com.sap.subsystem.vcs_repository.error.exception.EntityNotFoundException;
+import com.sap.subsystem.common.error.exception.DuplicateEntityException;
+import com.sap.subsystem.common.error.exception.EntityNotFoundException;
 import com.sap.subsystem.vcs_repository.repository.VcsRepositoryRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +61,7 @@ public class VcsRepositoryService {
         final List<VcsRepository> vcsRepositories = vcsRepositoryRepo.findAll();
         return vcsRepositoryMapper.toViews(vcsRepositories);
     }
-
+    @Transactional
     public void deleteVcsRepository(final String businessId) {
         final VcsRepositoryView vcsRepositoryView = getByBusinessId(businessId);
         final VcsRepository vcsRepository = vcsRepositoryMapper.toEntity(vcsRepositoryView);

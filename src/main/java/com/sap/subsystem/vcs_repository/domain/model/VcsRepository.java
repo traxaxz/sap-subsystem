@@ -1,5 +1,6 @@
 package com.sap.subsystem.vcs_repository.domain.model;
 
+import com.sap.subsystem.secret.domain.model.Secret;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.generator.EventType;
@@ -17,7 +18,10 @@ public class VcsRepository {
     private String repository;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(columnDefinition = "secret_id", referencedColumnName = "businessId")
+    @JoinTable(
+            name = "repository_secret",
+            joinColumns = @JoinColumn(name = "repository"),
+            inverseJoinColumns = @JoinColumn(name = "secret_id"))
     private Secret secretId;
 
     public Long getId() {
