@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Endpoints to the Secrets Controller Endpoints
+ *
+ * @author danail.zlatanov
+ * */
 @RestController
 @RequestMapping("/secret")
 public class SecretController {

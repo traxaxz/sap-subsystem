@@ -9,7 +9,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-
+/**
+ * Endpoints to the vcsRepository(Version Control System Repository)
+ *
+ * @author danail.zlatanov
+ * */
 @RestController
 @RequestMapping("/repository")
 public class VcsRepositoryController {
