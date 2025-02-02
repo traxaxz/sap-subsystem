@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 
 /**
@@ -29,9 +31,18 @@ public class SecretService {
         this.secretMapper = secretMapper;
     }
 
-    public SecretView getByBusinessId(final String businessId){
+    public SecretView getByBusinessId(final UUID businessId){
         final Secret secret = findByBusinessId(businessId);
         return secretMapper.toView(secret);
+    }
+
+    public Set<Secret> findByBusinessIdsIn(final Set<UUID> secrets){
+        return secretRepository.findByBusinessIdIn(secrets);
+    }
+
+    private Secret findByBusinessId(final UUID businessId){
+        return secretRepository.findByBusinessId(businessId)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     public List<SecretView> listAllSecrets(){
@@ -47,20 +58,15 @@ public class SecretService {
     }
 
     @Transactional
-    public void deleteSecret(final String businessId){
+    public void deleteSecret(final UUID businessId){
        final Secret secret = findByBusinessId(businessId);
        secretRepository.delete(secret);
     }
 
     private void validateSecret(final SecretDto secretDto){
-        boolean existsByBusinessId = secretRepository.existsByBusinessId(secretDto.secret());
-        if(existsByBusinessId){
+        boolean existsBySecret = secretRepository.existsBySecret(secretDto.secret());
+        if(existsBySecret){
             throw new DuplicateEntityException();
         }
-    }
-
-    private Secret findByBusinessId(final String businessId){
-        return secretRepository.findByBusinessId(businessId)
-                .orElseThrow(EntityNotFoundException::new);
     }
 }

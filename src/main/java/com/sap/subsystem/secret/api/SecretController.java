@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/secret")
@@ -18,7 +19,7 @@ public class SecretController {
     }
 
     @GetMapping("/{id}")
-    public SecretView getSecretById(@PathVariable final String id){
+    public SecretView getSecretById(@PathVariable final UUID id){
         return secretService.getByBusinessId(id);
     }
 
@@ -33,7 +34,7 @@ public class SecretController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteSecret(@PathVariable final String id){
-        secretService.getByBusinessId(id);
+    public void deleteSecret(@PathVariable final UUID id){
+        secretService.deleteSecret(id);
     }
 }

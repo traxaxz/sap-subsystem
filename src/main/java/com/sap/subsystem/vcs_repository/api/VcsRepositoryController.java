@@ -1,17 +1,17 @@
 package com.sap.subsystem.vcs_repository.api;
 
+import com.sap.subsystem.vcs_repository.domain.dto.EditVcsRepositoryDto;
 import com.sap.subsystem.vcs_repository.domain.dto.VcsRepositoryDto;
 import com.sap.subsystem.vcs_repository.domain.dto.VcsRepositoryView;
 import com.sap.subsystem.vcs_repository.service.VcsRepositoryService;
 import jakarta.validation.Valid;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping(name = "/repository")
-@Validated
+@RequestMapping("/repository")
 public class VcsRepositoryController {
     private final VcsRepositoryService vcsRepositoryService;
 
@@ -24,7 +24,7 @@ public class VcsRepositoryController {
         return vcsRepositoryService.listAllVcsRepositories();
     }
     @GetMapping("/{id}")
-    VcsRepositoryView getVcsRepositoryById(@PathVariable final String id){
+    VcsRepositoryView getVcsRepositoryById(@PathVariable final UUID id){
         return vcsRepositoryService.getByBusinessId(id);
     }
     @PostMapping
@@ -32,11 +32,11 @@ public class VcsRepositoryController {
         vcsRepositoryService.saveVcsRepository(vcsRepositoryDto);
     }
     @PatchMapping("/{id}")
-    void updateVcsRepository(@PathVariable final String id, @RequestBody @Valid final VcsRepositoryDto vcsRepositoryDto){
+    void updateVcsRepository(@PathVariable final UUID id, @RequestBody @Valid final EditVcsRepositoryDto vcsRepositoryDto){
         vcsRepositoryService.editVcsRepository(id, vcsRepositoryDto);
     }
     @DeleteMapping("/{id}")
-    void deleteVcsRepository(@PathVariable final String id){
+    void deleteVcsRepository(@PathVariable final UUID id){
         vcsRepositoryService.deleteVcsRepository(id);
     }
 }

@@ -1,5 +1,8 @@
 package com.sap.subsystem.vcs_repository.service;
 
+import com.sap.subsystem.secret.domain.model.Secret;
+import com.sap.subsystem.secret.service.SecretService;
+import com.sap.subsystem.vcs_repository.domain.dto.EditVcsRepositoryDto;
 import com.sap.subsystem.vcs_repository.domain.dto.VcsRepositoryDto;
 import com.sap.subsystem.vcs_repository.domain.dto.VcsRepositoryView;
 import com.sap.subsystem.vcs_repository.domain.mapping.VcsRepositoryMapper;
@@ -7,10 +10,13 @@ import com.sap.subsystem.vcs_repository.domain.model.VcsRepository;
 import com.sap.subsystem.common.error.exception.DuplicateEntityException;
 import com.sap.subsystem.common.error.exception.EntityNotFoundException;
 import com.sap.subsystem.vcs_repository.repository.VcsRepositoryRepo;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Service handling and managing data of type {@link VcsRepository}
@@ -26,32 +32,41 @@ import java.util.List;
 public class VcsRepositoryService {
     private final VcsRepositoryRepo vcsRepositoryRepo;
     private final VcsRepositoryMapper vcsRepositoryMapper;
+    private final SecretService secretService;
 
-    public VcsRepositoryService(VcsRepositoryRepo vcsRepositoryRepo, VcsRepositoryMapper vcsRepositoryMapper) {
+    public VcsRepositoryService(VcsRepositoryRepo vcsRepositoryRepo, VcsRepositoryMapper vcsRepositoryMapper, SecretService secretService) {
         this.vcsRepositoryRepo = vcsRepositoryRepo;
         this.vcsRepositoryMapper = vcsRepositoryMapper;
+        this.secretService = secretService;
     }
 
     @Transactional
     public void saveVcsRepository(final VcsRepositoryDto vcsRepositoryDto){
         //TODO check for repository if exists in VCS
         final VcsRepository vcsRepository = vcsRepositoryMapper.toEntity(vcsRepositoryDto);
-        validateRepository(vcsRepository);
+        validateRepository(vcsRepository.getRepository());
         vcsRepositoryRepo.save(vcsRepository);
     }
 
     @Transactional
-    public void editVcsRepository(final String businessId, final VcsRepositoryDto vcsRepositoryDto){
-        final VcsRepository vcsRepository = vcsRepositoryMapper.toEntity(vcsRepositoryDto);
-        validateRepository(vcsRepository);
+    public void editVcsRepository(final UUID businessId, final EditVcsRepositoryDto vcsRepositoryDto){
         final VcsRepository vcsRepositoryForUpdate = vcsRepositoryRepo.getByBusinessId(businessId)
                 .orElseThrow(EntityNotFoundException::new);
-        final VcsRepository updatedVcsRepository = vcsRepositoryMapper.update(vcsRepositoryForUpdate, vcsRepository);
 
-        vcsRepositoryRepo.save(updatedVcsRepository);
+        if(ObjectUtils.isNotEmpty(vcsRepositoryDto.repository()) && !vcsRepositoryDto.repository().equals(vcsRepositoryForUpdate.getRepository())){
+            validateRepository(vcsRepositoryDto.repository());
+        }
+
+
+        final VcsRepository vcsRepository = vcsRepositoryMapper.toEntity(vcsRepositoryDto);
+        vcsRepositoryMapper.update(vcsRepositoryForUpdate, vcsRepository);
+        final Set<Secret> secrets = secretService.findByBusinessIdsIn(vcsRepositoryDto.secrets());
+        mapSecrets(vcsRepositoryForUpdate, secrets);
+
+        vcsRepositoryRepo.save(vcsRepositoryForUpdate);
     }
 
-    public VcsRepositoryView getByBusinessId(final String businessId){
+    public VcsRepositoryView getByBusinessId(final UUID businessId){
        return vcsRepositoryRepo.getByBusinessId(businessId)
                 .map(vcsRepositoryMapper::toView)
                .orElseThrow(EntityNotFoundException::new);
@@ -62,20 +77,20 @@ public class VcsRepositoryService {
         return vcsRepositoryMapper.toViews(vcsRepositories);
     }
     @Transactional
-    public void deleteVcsRepository(final String businessId) {
-        final VcsRepositoryView vcsRepositoryView = getByBusinessId(businessId);
-        final VcsRepository vcsRepository = vcsRepositoryMapper.toEntity(vcsRepositoryView);
+    public void deleteVcsRepository(final UUID businessId) {
+        final VcsRepository vcsRepository = vcsRepositoryRepo.getByBusinessId(businessId)
+                .orElseThrow(EntityNotFoundException::new);
         vcsRepositoryRepo.delete(vcsRepository);
     }
 
-    private void validateRepository(final VcsRepository vcsRepository){
-        existsByBusinessId(vcsRepository.getBusinessId());
-    }
-
-    private void existsByBusinessId(final String businessId) {
-        final boolean existsByRepository = vcsRepositoryRepo.existsByRepository(businessId);
+    private void validateRepository(final String repository){
+        boolean existsByRepository = vcsRepositoryRepo.existsByRepository(repository);
         if(existsByRepository){
             throw new DuplicateEntityException();
         }
+    }
+
+    private void mapSecrets(final VcsRepository vcsRepository, final Set<Secret> secrets) {
+        secrets.forEach(vcsRepository::addSecret);
     }
 }

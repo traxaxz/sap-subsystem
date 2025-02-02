@@ -1,22 +1,28 @@
 package com.sap.subsystem.secret.domain.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.sap.subsystem.vcs_repository.domain.model.VcsRepository;
+import jakarta.persistence.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.generator.EventType;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "secret")
 public class Secret {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Generated(event = EventType.INSERT)
-    private String businessId;
+    private UUID businessId;
 
     private String secret;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "repository_id", referencedColumnName = "id")
+    private VcsRepository vcsRepository;
 
     public Long getId() {
         return id;
@@ -27,11 +33,11 @@ public class Secret {
         return this;
     }
 
-    public String getBusinessId() {
+    public UUID getBusinessId() {
         return businessId;
     }
 
-    public Secret setBusinessId(String businessId) {
+    public Secret setBusinessId(UUID businessId) {
         this.businessId = businessId;
         return this;
     }
@@ -42,6 +48,15 @@ public class Secret {
 
     public Secret setSecret(String secret) {
         this.secret = secret;
+        return this;
+    }
+
+    public VcsRepository getVcsRepository() {
+        return vcsRepository;
+    }
+
+    public Secret setVcsRepository(VcsRepository vcsRepository) {
+        this.vcsRepository = vcsRepository;
         return this;
     }
 }

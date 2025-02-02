@@ -8,9 +8,14 @@
             </not>
         </preConditions>
         <createTable tableName="vcs_repository">
-            <column name="id" type="bigint" autoIncrement="true"/>
-            <column name="business_id" defaultValueComputed="UUID()" type="uuid"/>
+            <column name="id" type="bigint" autoIncrement="true" />
+            <column name="business_id" defaultValueComputed="gen_random_uuid()" type="uuid" />
             <column name="repository" type="text"/>
         </createTable>
+        <addPrimaryKey tableName="vcs_repository" columnNames="id"/>
+        <addUniqueConstraint tableName="vcs_repository" columnNames="repository"/>
+        <createIndex tableName="vcs_repository" indexName="repo_name_index">
+            <column name="repository"/>
+        </createIndex>
     </changeSet>
 </databaseChangeLog>

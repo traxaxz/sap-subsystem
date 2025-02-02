@@ -5,24 +5,29 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.generator.EventType;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 @Entity
 @Table(name = "vcs_repository")
 public class VcsRepository {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Generated(event = EventType.INSERT)
-    private String businessId;
+    private UUID businessId;
 
     private String repository;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "repository_secret",
-            joinColumns = @JoinColumn(name = "repository"),
-            inverseJoinColumns = @JoinColumn(name = "secret_id"))
-    private Secret secretId;
+    @OneToMany(
+            mappedBy = "vcsRepository",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<Secret> secrets = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -33,11 +38,11 @@ public class VcsRepository {
         return this;
     }
 
-    public String getBusinessId() {
+    public UUID getBusinessId() {
         return businessId;
     }
 
-    public VcsRepository setBusinessId(String businessId) {
+    public VcsRepository setBusinessId(UUID businessId) {
         this.businessId = businessId;
         return this;
     }
@@ -51,12 +56,22 @@ public class VcsRepository {
         return this;
     }
 
-    public Secret getSecretId() {
-        return secretId;
+    public void addSecret(Secret secret) {
+        secrets.add(secret);
+        secret.setVcsRepository(this);
     }
 
-    public VcsRepository setSecretId(Secret secretId) {
-        this.secretId = secretId;
+    public void removeSecret(Secret secret) {
+        secrets.remove(secret);
+        secret.setVcsRepository(null);
+    }
+
+    public Set<Secret> getSecrets() {
+        return secrets;
+    }
+
+    public VcsRepository setSecrets(Set<Secret> secrets) {
+        this.secrets = secrets;
         return this;
     }
 }

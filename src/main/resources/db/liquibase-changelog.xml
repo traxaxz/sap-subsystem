@@ -3,6 +3,5 @@
     
     <include file="db/changelog/create-vcs_repository-table.xml" context="!test"/>
     <include file="db/changelog/create-secret-table.xml" context="!test"/>
-    <include file="db/changelog/create-repository_secret-table.xml" context="!test"/>
 
 </databaseChangeLog>
