@@ -16,3 +16,8 @@ spring:
     show-sql: true
   liquibase:
     change-log: classpath:db/liquibase-changelog.xml
+
+github:
+  api_url: https://api.github.com
+  token: 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
+  owner: traxaz

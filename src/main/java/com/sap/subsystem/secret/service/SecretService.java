@@ -2,6 +2,7 @@ package com.sap.subsystem.secret.service;
 
 import com.sap.subsystem.common.error.exception.DuplicateEntityException;
 import com.sap.subsystem.common.error.exception.EntityNotFoundException;
+import com.sap.subsystem.github_api.service.GithubSecretApiService;
 import com.sap.subsystem.secret.domain.dto.SecretDto;
 import com.sap.subsystem.secret.domain.dto.SecretView;
 import com.sap.subsystem.secret.domain.mapping.SecretMapper;
@@ -25,10 +26,9 @@ import java.util.UUID;
 public class SecretService {
     private final SecretRepository secretRepository;
     private final SecretMapper secretMapper;
-
     public SecretService(SecretRepository secretRepository, SecretMapper secretMapper) {
         this.secretRepository = secretRepository;
-        this.secretMapper = secretMapper;
+        this.secretMapper = secretMapper
     }
 
     public SecretView getByBusinessId(final UUID businessId){
