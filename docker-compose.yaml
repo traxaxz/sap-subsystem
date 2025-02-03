@@ -1,5 +1,20 @@
 version: '3.8'
 services:
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault-server
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: root
+      VAULT_ADDR: "http://127.0.0.1:8200"
+    cap_add:
+      - IPC_LOCK
+    entrypoint: ["/bin/sh", "-c", "/vault/scripts/setup.sh"]
+    volumes:
+      - ./vault/data:/vault/data
+      - ./vault/scripts:/vault/scripts
+
   postgres:
     image: postgres:15
     container_name: postgres_container
@@ -13,6 +28,27 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-
+    healthcheck:
+      test: [ "CMD", "vault", "status" ]
+      interval: 5s
+      retries: 5
+      start_period: 10s
+  app:
+    build: .
+    container_name: spring-boot-app
+    ports:
+      - "${SERVER_PORT}:8080"
+    environment:
+      - GITHUB_API_URL=https://api.github.com
+      - GITHUB_ACCESS_TOKEN=${GITHUB_ACCESS_TOKEN}
+      - GITHUB_OWNER=${GITHUB_OWNER}
+      - VAULT_ADDR=http://vault-server:8200
+      - VAULT_TOKEN=root
+      - SERVER_PORT=8081
+    depends_on:
+      vault:
+        condition: service_healthy
+      postgres:
+        condition: service_started
 volumes:
   postgres_data:
