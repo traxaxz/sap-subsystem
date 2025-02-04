@@ -17,7 +17,6 @@ public class VcsRepository {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Generated(event = EventType.INSERT)
     private UUID businessId;
 
     private String repository;

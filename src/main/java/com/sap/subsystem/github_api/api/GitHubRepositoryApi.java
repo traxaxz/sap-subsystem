@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.*;
 public interface GitHubRepositoryApi {
 
     @PostMapping("/user/repos")
-    void createRepository(@RequestBody final GithubRepositoryApiRequestDto request);
+    GithubRepositoryApiResponseDto createRepository(@RequestBody final GithubRepositoryApiRequestDto request);
 
     @PatchMapping("/repos/{owner}/{repo}")
-    void updateRepository(@PathVariable final String owner, @PathVariable final String repo, @RequestBody final GithubRepositoryApiRequestDto request);
+    GithubRepositoryApiResponseDto updateRepository(@PathVariable final String owner, @PathVariable final String repo, @RequestBody final GithubRepositoryApiRequestDto request);
 
     @GetMapping("/users/{owner}/repos")
-    ResponseEntity<GithubRepositoryApiResponseDto> getAllRepositories(@PathVariable final String owner);
+    GithubRepositoryApiResponseDto getAllRepositories(@PathVariable final String owner);
 
     @GetMapping("/users/{owner}/{repo}")
-    ResponseEntity<String> getRepository(@PathVariable final String owner, @PathVariable final String repo);
+    String getRepository(@PathVariable final String owner, @PathVariable final String repo);
 
     @DeleteMapping("repos/{owner}/{repo}")
-    void deleteRepository(@PathVariable final String owner, @PathVariable final String repo);
+    ResponseEntity<Void> deleteRepository(@PathVariable final String owner, @PathVariable final String repo);
 }

@@ -16,27 +16,27 @@ public class GithubRepositoryApiService {
     private final GithubProperties githubProperties;
     private final GithubApiMapper githubApiMapper;
 
-    public GithubRepositoryApiService(GitHubRepositoryApi gitHubRepositoryApi, GithubProperties githubProperties, GithubApiMapper githubApiMapper) {
+    public GithubRepositoryApiService(final GitHubRepositoryApi gitHubRepositoryApi, final GithubProperties githubProperties, final GithubApiMapper githubApiMapper) {
         this.gitHubRepositoryApi = gitHubRepositoryApi;
         this.githubProperties = githubProperties;
         this.githubApiMapper = githubApiMapper;
     }
 
-    public void createRepository(final VcsRepositoryDto vcsRepositoryDto){
+    public GithubRepositoryApiResponseDto createRepository(final VcsRepositoryDto vcsRepositoryDto){
         final GithubRepositoryApiRequestDto githubRepositoryApiRequestDto = githubApiMapper.toGithubDto(vcsRepositoryDto);
-        gitHubRepositoryApi.createRepository(githubRepositoryApiRequestDto);
+        return gitHubRepositoryApi.createRepository(githubRepositoryApiRequestDto);
     }
 
-    public void updateRepository(final String repoName, final EditVcsRepositoryDto vcsRepositoryDto){
+    public GithubRepositoryApiResponseDto updateRepository(final String repoName, final EditVcsRepositoryDto vcsRepositoryDto){
         final GithubRepositoryApiRequestDto githubRepositoryApiRequestDto = githubApiMapper.toGithubDto(vcsRepositoryDto);
-        gitHubRepositoryApi.updateRepository(githubProperties.getOwner(), repoName, githubRepositoryApiRequestDto);
+        return gitHubRepositoryApi.updateRepository(githubProperties.getOwner(), repoName, githubRepositoryApiRequestDto);
     }
 
     public GithubRepositoryApiResponseDto getAllRepositories(){
-        final ResponseEntity<GithubRepositoryApiResponseDto> allRepositories = gitHubRepositoryApi.getAllRepositories(githubProperties.getOwner());
-        return allRepositories.getBody();
+        return gitHubRepositoryApi.getAllRepositories(githubProperties.getOwner());
     }
-    public void deleteRepository(final String repoName){
-        gitHubRepositoryApi.deleteRepository(githubProperties.getOwner(), repoName);
+    public ResponseEntity<Void> deleteRepository(final String repoName){
+       return gitHubRepositoryApi.deleteRepository(githubProperties.getOwner(), repoName);
     }
+
 }

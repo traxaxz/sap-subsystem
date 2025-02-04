@@ -1,5 +1,7 @@
 package com.sap.subsystem.vcs_repository.domain.dto;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.NotBlank;
 
 /**
@@ -11,5 +13,6 @@ import jakarta.validation.constraints.NotBlank;
  * */
 public record VcsRepositoryDto(
         @NotBlank(message = "Repository field must not be empty")
-        String repository
+        String repository,
+        UUID secret
 ) {}

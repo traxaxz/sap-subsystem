@@ -28,7 +28,7 @@ public class VcsRepositoryService {
     private final VcsRepositoryRepo vcsRepositoryRepo;
     private final SecretService secretService;
 
-    public VcsRepositoryService(VcsRepositoryRepo vcsRepositoryRepo, SecretService secretService) {
+    public VcsRepositoryService(final VcsRepositoryRepo vcsRepositoryRepo, final SecretService secretService) {
         this.vcsRepositoryRepo = vcsRepositoryRepo;
         this.secretService = secretService;
     }
@@ -38,7 +38,7 @@ public class VcsRepositoryService {
     }
 
     public void update(final VcsRepository vcsRepositoryForUpdate, final Set<UUID> secrets){
-        Set<Secret> foundSecrets = secretService.findByBusinessIdsIn(secrets);
+        final Set<Secret> foundSecrets = secretService.findByBusinessIdsIn(secrets);
         mapSecrets(vcsRepositoryForUpdate, foundSecrets);
 
         vcsRepositoryRepo.save(vcsRepositoryForUpdate);
@@ -62,7 +62,7 @@ public class VcsRepositoryService {
         vcsRepositoryRepo.delete(vcsRepository);
     }
 
-    private void mapSecrets(final VcsRepository vcsRepository, final Set<Secret> secrets) {
+    private void mapSecrets(final VcsRepository vcsRepository, final Iterable<Secret> secrets) {
         secrets.forEach(vcsRepository::addSecret);
     }
 }

@@ -26,9 +26,9 @@ import java.util.UUID;
 public class SecretService {
     private final SecretRepository secretRepository;
     private final SecretMapper secretMapper;
-    public SecretService(SecretRepository secretRepository, SecretMapper secretMapper) {
+    public SecretService(final SecretRepository secretRepository, final SecretMapper secretMapper) {
         this.secretRepository = secretRepository;
-        this.secretMapper = secretMapper
+        this.secretMapper = secretMapper;
     }
 
     public SecretView getByBusinessId(final UUID businessId){
@@ -40,10 +40,6 @@ public class SecretService {
         return secretRepository.findByBusinessIdIn(secrets);
     }
 
-    private Secret findByBusinessId(final UUID businessId){
-        return secretRepository.findByBusinessId(businessId)
-                .orElseThrow(EntityNotFoundException::new);
-    }
 
     public List<SecretView> listAllSecrets(){
         final List<Secret> secrets = secretRepository.findAll();
@@ -53,9 +49,11 @@ public class SecretService {
     @Transactional
     public void createSecret(final SecretDto secretDto){
         validateSecret(secretDto);
+        buildSecret()
         final Secret secret = secretMapper.toEntity(secretDto);
         secretRepository.save(secret);
     }
+
 
     @Transactional
     public void deleteSecret(final UUID businessId){
@@ -64,9 +62,18 @@ public class SecretService {
     }
 
     private void validateSecret(final SecretDto secretDto){
-        boolean existsBySecret = secretRepository.existsBySecret(secretDto.secret());
+        final boolean existsBySecret = secretRepository.existsBySecret(secretDto.secret());
         if(existsBySecret){
             throw new DuplicateEntityException();
         }
+    }
+
+    private Secret findByBusinessId(final UUID businessId){
+        return secretRepository.findByBusinessId(businessId)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private void buildSecret() {
+
     }
 }

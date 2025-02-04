@@ -1,5 +1,6 @@
 package com.sap.subsystem.vcs_repository.domain.mapping;
 
+import com.sap.subsystem.github_api.domain.dto.GithubRepositoryApiResponseDto;
 import com.sap.subsystem.secret.domain.dto.SecretView;
 import com.sap.subsystem.secret.domain.model.Secret;
 import com.sap.subsystem.vcs_repository.domain.dto.EditVcsRepositoryDto;
@@ -17,13 +18,19 @@ import java.util.stream.Collectors;
 public interface VcsRepositoryMapper {
 
     VcsRepository toEntity(VcsRepositoryDto vcsRepositoryDto);
-    VcsRepository toEntity(VcsRepositoryView vcsRepositoryView);
+
     @Mapping(target = "secrets", ignore = true)
     VcsRepository toEntity(EditVcsRepositoryDto vcsRepositoryDto);
+
     @Mapping(target = "secrets", source = "secrets", qualifiedByName = "mapSecrets")
     VcsRepositoryView toView(VcsRepository vcsRepository);
+
     List<VcsRepositoryView> toViews(List<VcsRepository> repositories);
+
     VcsRepository update(@MappingTarget VcsRepository entityForUpdate, VcsRepository newEntity);
+
+    @Mapping(target = "repository", source = "name")
+    VcsRepository toEntity(GithubRepositoryApiResponseDto createdRepository);
 
     @Named("mapSecrets")
     default Set<SecretView> mapSecrets(final Set<Secret> secrets){

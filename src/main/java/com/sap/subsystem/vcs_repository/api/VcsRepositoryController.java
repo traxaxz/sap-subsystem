@@ -19,7 +19,7 @@ import java.util.UUID;
 public class VcsRepositoryController {
     private final VcsRepositoryFacade vcsRepositoryFacade;
 
-    public VcsRepositoryController(VcsRepositoryFacade vcsRepositoryFacade) {
+    public VcsRepositoryController(final VcsRepositoryFacade vcsRepositoryFacade) {
         this.vcsRepositoryFacade = vcsRepositoryFacade;
     }
 
@@ -32,16 +32,24 @@ public class VcsRepositoryController {
     VcsRepositoryView getVcsRepositoryById(@PathVariable final UUID id){
         return vcsRepositoryFacade.getByBusinessId(id);
     }
+
     @PostMapping
     void createVcsRepository(@RequestBody @Valid final VcsRepositoryDto vcsRepositoryDto){
         vcsRepositoryFacade.createVcsRepository(vcsRepositoryDto);
     }
+
     @PatchMapping("/{id}")
     void updateVcsRepository(@PathVariable final UUID id, @RequestBody @Valid final EditVcsRepositoryDto vcsRepositoryDto){
         vcsRepositoryFacade.editVcsRepository(id, vcsRepositoryDto);
     }
+
     @DeleteMapping("/{id}")
     void deleteVcsRepository(@PathVariable final UUID id){
         vcsRepositoryFacade.deleteVcsRepository(id);
+    }
+
+    @PostMapping("/secret/validate")
+    void isRepositorySecretValid(@RequestBody final VcsRepositoryDto vcsRepositoryDto){
+        vcsRepositoryFacade.validateSecret(vcsRepositoryDto);
     }
 }

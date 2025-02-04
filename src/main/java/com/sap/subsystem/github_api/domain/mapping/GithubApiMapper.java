@@ -1,6 +1,7 @@
 package com.sap.subsystem.github_api.domain.mapping;
 
 import com.sap.subsystem.github_api.domain.dto.GithubRepositoryApiRequestDto;
+import com.sap.subsystem.github_api.domain.dto.GithubRepositoryApiResponseDto;
 import com.sap.subsystem.vcs_repository.domain.dto.EditVcsRepositoryDto;
 import com.sap.subsystem.vcs_repository.domain.dto.VcsRepositoryDto;
 import org.mapstruct.Mapper;
@@ -17,4 +18,7 @@ public interface GithubApiMapper {
 
     @Mapping(target = "name", source = "repository")
     GithubRepositoryApiRequestDto toGithubDto(final EditVcsRepositoryDto vcsRepositoryDto);
+
+    @Mapping(target = "repository", source = "name")
+    VcsRepositoryDto toVcsRepositoryDto(final GithubRepositoryApiResponseDto responseDto);
 }
