@@ -7,36 +7,41 @@ import jakarta.validation.Valid;
 
 import com.sap.subsystem.secret.domain.dto.SecretDto;
 import com.sap.subsystem.secret.domain.dto.SecretView;
-import com.sap.subsystem.secret.service.SecretService;
+import com.sap.subsystem.secret.facade.SecretFacade;
 
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/secret")
 public class SecretController {
-    private final SecretService secretService;
+    private final SecretFacade secretFacade;
 
-    public SecretController(final SecretService secretService) {
-        this.secretService = secretService;
+    public SecretController(final SecretFacade secretFacade) {
+        this.secretFacade = secretFacade;
     }
 
     @GetMapping("/{id}")
     public SecretView getSecretById(@PathVariable final UUID id) {
-        return secretService.getByBusinessId(id);
+        return secretFacade.getByBusinessId(id);
     }
 
     @GetMapping
     public List<SecretView> listAllSecrets() {
-        return secretService.listAllSecrets();
+        return secretFacade.listAllSecrets();
     }
 
-    @PutMapping
-    public void updateSecret(@RequestBody @Valid final SecretDto secretDto) {
-        secretService.updateSecret(secretDto);
+    @PostMapping
+    public void createSecret(@RequestBody @Valid final SecretDto secretDto){
+        secretFacade.createSecret(secretDto);
+    }
+
+    @PutMapping("/{id}")
+    public void updateSecret(@PathVariable final UUID id, @RequestBody @Valid final SecretDto secretDto) {
+        secretFacade.updateSecret(id, secretDto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteSecret(@PathVariable final UUID id) {
-        secretService.deleteSecret(id);
+        secretFacade.deleteSecret(id);
     }
 }

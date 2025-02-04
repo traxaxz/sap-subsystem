@@ -15,7 +15,6 @@ public class Secret {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Generated(event = EventType.INSERT)
     private UUID businessId;
 
     private String secret;

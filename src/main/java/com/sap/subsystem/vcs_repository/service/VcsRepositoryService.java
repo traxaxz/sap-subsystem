@@ -38,7 +38,7 @@ public class VcsRepositoryService {
     }
 
     public void update(final VcsRepository vcsRepositoryForUpdate, final Set<UUID> secrets){
-        final Set<Secret> foundSecrets = secretService.findByBusinessIdsIn(secrets);
+        final List<Secret> foundSecrets = secretService.findByBusinessIdsIn(secrets);
         mapSecrets(vcsRepositoryForUpdate, foundSecrets);
 
         vcsRepositoryRepo.save(vcsRepositoryForUpdate);

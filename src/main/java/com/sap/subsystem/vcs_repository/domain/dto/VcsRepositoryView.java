@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sap.subsystem.secret.domain.dto.SecretView;
 
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * DTO view representation to the client
@@ -12,7 +13,7 @@ import java.util.Set;
  * */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public record VcsRepositoryView(
-        String businessId,
+        UUID businessId,
         String repository,
         Set<SecretView> secrets
 ) {

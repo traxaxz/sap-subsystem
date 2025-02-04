@@ -4,6 +4,6 @@ import java.util.List;
 
 public record GithubSecretApiResponseDto(
         int total_count,
-        List<SecretDto> secrets
+        List<GithubSecretDto> secrets
 ) {
 }
