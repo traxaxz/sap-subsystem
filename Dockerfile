@@ -1,16 +1,19 @@
-FROM openjdk:17-jdk-slim
+FROM maven:3.9.5-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
-COPY target/*.jar app.jar
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
-EXPOSE 8080
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-ENV GITHUB_API_URL=https://api.github.com
-ENV GITHUB_ACCESS_TOKEN=your_token_here
-ENV GITHUB_OWNER=your_github_username
-ENV SERVER_PORT=8081
-ENV VAULT_ADDR=http://vault-server:8200
-ENV VAULT_TOKEN=root
+FROM eclipse-temurin:21-jdk
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8081
+
+CMD ["java", "-jar", "app.jar"]

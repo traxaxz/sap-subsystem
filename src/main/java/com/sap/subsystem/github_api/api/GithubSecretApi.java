@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
-@FeignClient(name ="githubClient", url = "${github.api_url}", configuration = GithubFeignInterceptor.class)
+@FeignClient(name ="githubSecretApi", url = "${github.api_url}", configuration = GithubFeignInterceptor.class)
 public interface GithubSecretApi {
 
     @GetMapping("/repos/{owner}/{repo}/actions/organization-secrets")

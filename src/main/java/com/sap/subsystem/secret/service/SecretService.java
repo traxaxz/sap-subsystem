@@ -49,7 +49,7 @@ public class SecretService {
     @Transactional
     public void createSecret(final SecretDto secretDto){
         validateSecret(secretDto);
-        buildSecret()
+        buildSecret();
         final Secret secret = secretMapper.toEntity(secretDto);
         secretRepository.save(secret);
     }

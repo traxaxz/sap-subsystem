@@ -10,10 +10,16 @@ services:
       VAULT_ADDR: "http://127.0.0.1:8200"
     cap_add:
       - IPC_LOCK
-    entrypoint: ["/bin/sh", "-c", "/vault/scripts/setup.sh"]
     volumes:
-      - ./vault/data:/vault/data
+      - vault_data:/vault/data
       - ./vault/scripts:/vault/scripts
+    healthcheck:
+      test: [ "CMD", "vault", "status" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    command: [ "vault", "server", "-dev" ]
 
   postgres:
     image: postgres:15
@@ -24,20 +30,20 @@ services:
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: sap_subsystem
     ports:
-      - "127.0.0.1:543:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/initSql/init.sql
     healthcheck:
-      test: [ "CMD", "vault", "status" ]
+      test: [ "CMD-SHELL", "pg_isready -U root -d sap_subsystem" ]
       interval: 5s
       retries: 5
       start_period: 10s
   app:
     build: .
-    container_name: spring-boot-app
+    container_name: sap_subsystem_spring_boot_app
     ports:
-      - "${SERVER_PORT}:8080"
+      - "${SERVER_PORT}:8081"
     environment:
       - GITHUB_API_URL=https://api.github.com
       - GITHUB_ACCESS_TOKEN=${GITHUB_ACCESS_TOKEN}
@@ -49,6 +55,7 @@ services:
       vault:
         condition: service_healthy
       postgres:
-        condition: service_started
+        condition: service_healthy
 volumes:
   postgres_data:
+  vault_data:

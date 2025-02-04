@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name ="githubClient", url = "${github.api_url}", configuration = GithubFeignInterceptor.class)
+@FeignClient(name ="githubRepoApi", url = "${github.api_url}", configuration = GithubFeignInterceptor.class)
 public interface GitHubRepositoryApi {
 
     @PostMapping("/user/repos")
