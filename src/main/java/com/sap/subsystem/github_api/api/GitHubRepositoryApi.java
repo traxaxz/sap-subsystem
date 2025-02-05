@@ -17,8 +17,6 @@ public interface GitHubRepositoryApi {
     @PatchMapping("/repos/{owner}/{repo}")
     GithubRepositoryApiResponseDto updateRepository(@PathVariable final String owner, @PathVariable final String repo, @RequestBody final GithubRepositoryApiRequestDto request);
 
-    @GetMapping("/users/{owner}/repos")
-    GithubRepositoryApiResponseDto getAllRepositories(@PathVariable final String owner);
 
     @GetMapping("/users/{owner}/{repo}")
     String getRepository(@PathVariable final String owner, @PathVariable final String repo);

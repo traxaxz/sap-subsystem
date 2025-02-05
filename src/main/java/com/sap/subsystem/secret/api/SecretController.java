@@ -1,7 +1,6 @@
 package com.sap.subsystem.secret.api;
 
 import java.util.List;
-import java.util.UUID;
 
 import jakarta.validation.Valid;
 
@@ -21,7 +20,7 @@ public class SecretController {
     }
 
     @GetMapping("/{id}")
-    public SecretView getSecretById(@PathVariable final UUID id) {
+    public SecretView getSecretById(@PathVariable final String id) {
         return secretFacade.getByBusinessId(id);
     }
 
@@ -36,12 +35,12 @@ public class SecretController {
     }
 
     @PutMapping("/{id}")
-    public void updateSecret(@PathVariable final UUID id, @RequestBody @Valid final SecretDto secretDto) {
+    public void updateSecret(@PathVariable final String id, @RequestBody @Valid final SecretDto secretDto) {
         secretFacade.updateSecret(id, secretDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteSecret(@PathVariable final UUID id) {
+    public void deleteSecret(@PathVariable final String id) {
         secretFacade.deleteSecret(id);
     }
 }

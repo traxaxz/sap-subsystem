@@ -8,9 +8,7 @@ import com.sap.subsystem.secret.repository.SecretRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 
 /**
@@ -26,11 +24,11 @@ public class SecretService {
         this.secretRepository = secretRepository;
     }
 
-    public Secret getByBusinessId(final UUID businessId){
+    public Secret getByBusinessId(final String businessId){
         return findByBusinessId(businessId);
     }
 
-    public List<Secret> findByBusinessIdsIn(final Set<UUID> secrets){
+    public List<Secret> findByBusinessIdsIn(final Set<String> secrets){
         return secretRepository.findByBusinessIdIn(secrets);
     }
 
@@ -42,7 +40,7 @@ public class SecretService {
         secretRepository.save(secret);
     }
 
-    public void deleteSecret(final UUID businessId){
+    public void deleteSecret(final String businessId){
        final Secret secret = findByBusinessId(businessId);
        secretRepository.delete(secret);
     }
@@ -53,7 +51,7 @@ public class SecretService {
         }
     }
 
-    public void validateForUpdate(final UUID businessId, final SecretDto secretDto) {
+    public void validateForUpdate(final String businessId, final SecretDto secretDto) {
         final Secret foundSecret = findByBusinessId(businessId);
         if(!foundSecret.getSecret().equals(secretDto.secret())){
             validateSecret(secretDto.secret());
@@ -71,7 +69,7 @@ public class SecretService {
         return secretRepository.existsBySecret(secretName);
     }
 
-    private Secret findByBusinessId(final UUID businessId){
+    private Secret findByBusinessId(final String businessId){
         return secretRepository.findByBusinessId(businessId)
                 .orElseThrow(EntityNotFoundException::new);
     }

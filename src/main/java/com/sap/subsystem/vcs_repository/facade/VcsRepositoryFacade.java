@@ -5,20 +5,19 @@ import com.sap.subsystem.common.error.exception.GithubException;
 import com.sap.subsystem.common.error.exception.InvalidSecretException;
 import com.sap.subsystem.github_api.domain.dto.GithubRepositoryApiResponseDto;
 import com.sap.subsystem.github_api.service.GithubRepositoryApiService;
+import com.sap.subsystem.secret.facade.SecretFacade;
 import com.sap.subsystem.vcs_repository.domain.dto.EditVcsRepositoryDto;
 import com.sap.subsystem.vcs_repository.domain.dto.VcsRepositoryDto;
 import com.sap.subsystem.vcs_repository.domain.dto.VcsRepositoryView;
 import com.sap.subsystem.vcs_repository.domain.mapping.VcsRepositoryMapper;
 import com.sap.subsystem.vcs_repository.domain.model.VcsRepository;
 import com.sap.subsystem.vcs_repository.service.VcsRepositoryService;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Component
 @Transactional(readOnly = true)
@@ -27,12 +26,14 @@ public class VcsRepositoryFacade {
     private final VcsRepositoryService vcsRepositoryService;
     private final VcsRepositoryMapper vcsRepositoryMapper;
     private final GithubRepositoryApiService githubRepositoryApiService;
+    private final SecretFacade secretFacade;
 
     public VcsRepositoryFacade(final VcsRepositoryService vcsRepositoryService, final VcsRepositoryMapper vcsRepositoryMapper,
-                               final GithubRepositoryApiService githubRepositoryApiService) {
+                               final GithubRepositoryApiService githubRepositoryApiService, SecretFacade secretFacade) {
         this.vcsRepositoryService = vcsRepositoryService;
         this.vcsRepositoryMapper = vcsRepositoryMapper;
         this.githubRepositoryApiService = githubRepositoryApiService;
+        this.secretFacade = secretFacade;
     }
 
     @Transactional
@@ -44,12 +45,14 @@ public class VcsRepositoryFacade {
     }
 
     @Transactional
-    public void editVcsRepository(final UUID businessId, final EditVcsRepositoryDto vcsRepositoryDto){
+    public void editVcsRepository(final String businessId, final EditVcsRepositoryDto vcsRepositoryDto){
         final VcsRepository vcsRepositoryForUpdate = vcsRepositoryService.getByBusinessId(businessId);
 
-        if(ObjectUtils.isNotEmpty(vcsRepositoryDto.repository())
-                && !vcsRepositoryDto.repository().equals(vcsRepositoryForUpdate.getRepository())){
+        if(!vcsRepositoryDto.repository().equals(vcsRepositoryForUpdate.getRepository())){
             validateRepository(vcsRepositoryDto.repository());
+        }
+        if(!vcsRepositoryDto.secrets().isEmpty()){
+            secretFacade.updateSecrets(vcsRepositoryForUpdate.getRepository(), businessId, vcsRepositoryDto.secrets());
         }
 
         final GithubRepositoryApiResponseDto updatedRepository = githubRepositoryApiService.updateRepository(vcsRepositoryForUpdate.getRepository(), vcsRepositoryDto);
@@ -64,15 +67,16 @@ public class VcsRepositoryFacade {
         return vcsRepositoryMapper.toViews(vcsRepositories);
     }
 
-    public VcsRepositoryView getByBusinessId(final UUID businessId) {
+    public VcsRepositoryView getByBusinessId(final String businessId) {
         final VcsRepository vcsRepository = vcsRepositoryService.getByBusinessId(businessId);
         return vcsRepositoryMapper.toView(vcsRepository);
     }
 
     @Transactional
-    public void deleteVcsRepository(final UUID businessId) {
-        final ResponseEntity<Void> response = githubRepositoryApiService.deleteRepository(String.valueOf(businessId));
-        if(response.getStatusCode() == HttpStatus.OK){
+    public void deleteVcsRepository(final String businessId) {
+        final VcsRepository foundRepository = vcsRepositoryService.getByBusinessId(businessId);
+        final ResponseEntity<Void> response = githubRepositoryApiService.deleteRepository(foundRepository.getRepository());
+        if(response.getStatusCode() == HttpStatus.NO_CONTENT){
             vcsRepositoryService.delete(businessId);
         } else {
             throw new GithubException("Failed to delete repository");

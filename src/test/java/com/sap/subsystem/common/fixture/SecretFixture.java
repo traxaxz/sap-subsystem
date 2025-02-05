@@ -17,6 +17,6 @@ public final class SecretFixture {
     public static Secret create() {
         return new Secret()
                 .setSecret(FAKER.name().title())
-                .setBusinessId(UUID.fromString(FAKER.internet().uuid()));
+                .setBusinessId((FAKER.internet().uuid()));
     }
 }

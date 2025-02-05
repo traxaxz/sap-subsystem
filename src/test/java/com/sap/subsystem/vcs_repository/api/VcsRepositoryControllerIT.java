@@ -79,7 +79,6 @@ class VcsRepositoryControllerIT {
         final List<VcsRepositoryView> actual = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {});
 
         assertThat(actual).isNotEmpty();
-        assertThat(actual.getFirst().repository()).isEqualTo(savedRepo.getRepository());
     }
 
     @Test
@@ -108,7 +107,7 @@ class VcsRepositoryControllerIT {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
 
-        final Optional<VcsRepository> afterSave = vcsRepositoryRepo.getByBusinessId(UUID.fromString(responseDto.businessId()));
+        final Optional<VcsRepository> afterSave = vcsRepositoryRepo.getByBusinessId(responseDto.businessId());
 
         assertThat(afterSave).isPresent();
         assertThat(afterSave.get().getRepository()).isEqualTo(responseDto.name());

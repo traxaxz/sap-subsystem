@@ -104,6 +104,12 @@
 			<version>1.18.3</version> <!-- or newer -->
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.goterl</groupId>
+			<artifactId>lazysodium-java</artifactId>
+			<version>5.1.4</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

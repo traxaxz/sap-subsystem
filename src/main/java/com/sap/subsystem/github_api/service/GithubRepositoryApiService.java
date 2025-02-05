@@ -32,9 +32,6 @@ public class GithubRepositoryApiService {
         return gitHubRepositoryApi.updateRepository(githubProperties.getOwner(), repoName, githubRepositoryApiRequestDto);
     }
 
-    public GithubRepositoryApiResponseDto getAllRepositories(){
-        return gitHubRepositoryApi.getAllRepositories(githubProperties.getOwner());
-    }
     public ResponseEntity<Void> deleteRepository(final String repoName){
        return gitHubRepositoryApi.deleteRepository(githubProperties.getOwner(), repoName);
     }

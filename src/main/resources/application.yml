@@ -5,7 +5,7 @@ spring:
   application:
     name: subsystem
   datasource:
-    url: jdbc:postgresql://postgres_container:5432/sap_subsystem
+    url: jdbc:postgresql://localhost:5432/sap_subsystem
     driver-class-name: org.postgresql.Driver
     username: root
     password: pass
@@ -19,6 +19,6 @@ spring:
 
 github:
   api_url: ${GITHUB_API_URL:https://api.github.com}
-  token: ${GITHUB_ACCESS_TOKEN}
-  owner: ${GITHUB_OWNER}
+  token: ${GITHUB_ACCESS_TOKEN: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}
+  owner: ${GITHUB_OWNER:traxaz}
 

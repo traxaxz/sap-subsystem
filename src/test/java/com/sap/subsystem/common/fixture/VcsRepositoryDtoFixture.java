@@ -15,7 +15,7 @@ public final class VcsRepositoryDtoFixture {
     public static VcsRepositoryDto create(){
         return new VcsRepositoryDto(
                 FAKER.name().title(),
-                UUID.fromString(FAKER.internet().uuid())
+                FAKER.internet().uuid()
         );
     }
 

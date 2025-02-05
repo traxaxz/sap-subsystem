@@ -15,14 +15,14 @@ public final class VcsRepositoryFixture {
     public static VcsRepository create(){
         return new VcsRepository()
                 .setRepository(FAKER.name().title())
-                .setBusinessId(UUID.fromString(FAKER.internet().uuid()))
+                .setBusinessId(FAKER.internet().uuid())
                 .setSecrets(Set.of(SecretFixture.create()));
     }
 
     public static VcsRepository create(final Secret secret){
         return new VcsRepository()
                 .setRepository(FAKER.name().title())
-                .setBusinessId(UUID.fromString(FAKER.internet().uuid()))
+                .setBusinessId(FAKER.internet().uuid())
                 .setSecrets(Set.of(secret));
     }
 }

@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.generator.EventType;
 
-import java.util.UUID;
-
 @Entity
 @Table(name = "secret")
 public class Secret {
@@ -15,7 +13,8 @@ public class Secret {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private UUID businessId;
+    @Generated(event = EventType.INSERT)
+    private String businessId;
 
     private String secret;
 
@@ -32,11 +31,11 @@ public class Secret {
         return this;
     }
 
-    public UUID getBusinessId() {
+    public String getBusinessId() {
         return businessId;
     }
 
-    public Secret setBusinessId(UUID businessId) {
+    public Secret setBusinessId(String businessId) {
         this.businessId = businessId;
         return this;
     }

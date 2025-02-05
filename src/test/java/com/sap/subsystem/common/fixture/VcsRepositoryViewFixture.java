@@ -17,7 +17,7 @@ public final class VcsRepositoryViewFixture {
 
     public static VcsRepositoryView create(){
         return new VcsRepositoryView(
-                UUID.fromString(FAKER.internet().uuid()),
+                FAKER.internet().uuid(),
                 FAKER.name().title(),
                 SecretViewFixture.createMultiple());
     }

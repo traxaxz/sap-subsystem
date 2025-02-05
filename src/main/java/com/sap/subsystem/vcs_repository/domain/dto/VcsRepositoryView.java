@@ -13,7 +13,7 @@ import java.util.UUID;
  * */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public record VcsRepositoryView(
-        UUID businessId,
+        String businessId,
         String repository,
         Set<SecretView> secrets
 ) {

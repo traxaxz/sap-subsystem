@@ -3,6 +3,8 @@ package com.sap.subsystem.common.fixture;
 import com.github.javafaker.Faker;
 import com.sap.subsystem.github_api.domain.dto.GithubRepositoryApiResponseDto;
 
+import java.util.UUID;
+
 public final class GithubRepositoryApiResponseDtoFixture {
     private static final Faker FAKER = new Faker();
 
@@ -11,7 +13,6 @@ public final class GithubRepositoryApiResponseDtoFixture {
     public static GithubRepositoryApiResponseDto create(){
         return new GithubRepositoryApiResponseDto(
                 FAKER.name().title(),
-                FAKER.internet().uuid()
-        );
+                FAKER.internet().uuid());
     }
 }

@@ -15,7 +15,7 @@ public final class SecretViewFixture {
 
     public static SecretView create(){
         return new SecretView(
-                UUID.fromString(FAKER.internet().uuid()),
+                FAKER.internet().uuid(),
                 FAKER.name().title());
     }
 

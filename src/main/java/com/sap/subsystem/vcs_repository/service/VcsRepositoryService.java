@@ -1,18 +1,14 @@
 package com.sap.subsystem.vcs_repository.service;
 
+import com.sap.subsystem.common.error.exception.EntityNotFoundException;
 import com.sap.subsystem.secret.domain.model.Secret;
 import com.sap.subsystem.secret.service.SecretService;
-import com.sap.subsystem.vcs_repository.domain.mapping.VcsRepositoryMapper;
 import com.sap.subsystem.vcs_repository.domain.model.VcsRepository;
-import com.sap.subsystem.common.error.exception.DuplicateEntityException;
-import com.sap.subsystem.common.error.exception.EntityNotFoundException;
 import com.sap.subsystem.vcs_repository.repository.VcsRepositoryRepo;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Service handling and managing data of type {@link VcsRepository}
@@ -37,14 +33,14 @@ public class VcsRepositoryService {
         vcsRepositoryRepo.save(vcsRepository);
     }
 
-    public void update(final VcsRepository vcsRepositoryForUpdate, final Set<UUID> secrets){
+    public void update(final VcsRepository vcsRepositoryForUpdate, final Set<String> secrets){
         final List<Secret> foundSecrets = secretService.findByBusinessIdsIn(secrets);
         mapSecrets(vcsRepositoryForUpdate, foundSecrets);
 
         vcsRepositoryRepo.save(vcsRepositoryForUpdate);
     }
 
-    public VcsRepository getByBusinessId(final UUID businessId){
+    public VcsRepository getByBusinessId(final String businessId){
        return vcsRepositoryRepo.getByBusinessId(businessId)
                .orElseThrow(EntityNotFoundException::new);
     }
@@ -56,7 +52,7 @@ public class VcsRepositoryService {
        return vcsRepositoryRepo.findAll();
     }
 
-    public void delete(final UUID businessId) {
+    public void delete(final String businessId) {
         final VcsRepository vcsRepository = vcsRepositoryRepo.getByBusinessId(businessId)
                 .orElseThrow(EntityNotFoundException::new);
         vcsRepositoryRepo.delete(vcsRepository);

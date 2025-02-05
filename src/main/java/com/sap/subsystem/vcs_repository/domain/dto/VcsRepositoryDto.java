@@ -14,5 +14,5 @@ import jakarta.validation.constraints.NotBlank;
 public record VcsRepositoryDto(
         @NotBlank(message = "Repository field must not be empty")
         String repository,
-        UUID secret
+        String secret
 ) {}

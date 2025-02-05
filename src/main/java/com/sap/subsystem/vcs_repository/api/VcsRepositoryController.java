@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 /**
  * Endpoints to the vcsRepository(Version Control System Repository)
  *
@@ -29,7 +28,7 @@ public class VcsRepositoryController {
     }
 
     @GetMapping("/{id}")
-    VcsRepositoryView getVcsRepositoryById(@PathVariable final UUID id){
+    VcsRepositoryView getVcsRepositoryById(@PathVariable final String id){
         return vcsRepositoryFacade.getByBusinessId(id);
     }
 
@@ -39,12 +38,12 @@ public class VcsRepositoryController {
     }
 
     @PatchMapping("/{id}")
-    void updateVcsRepository(@PathVariable final UUID id, @RequestBody @Valid final EditVcsRepositoryDto vcsRepositoryDto){
+    void updateVcsRepository(@PathVariable final String id, @RequestBody @Valid final EditVcsRepositoryDto vcsRepositoryDto){
         vcsRepositoryFacade.editVcsRepository(id, vcsRepositoryDto);
     }
 
     @DeleteMapping("/{id}")
-    void deleteVcsRepository(@PathVariable final UUID id){
+    void deleteVcsRepository(@PathVariable final String id){
         vcsRepositoryFacade.deleteVcsRepository(id);
     }
 

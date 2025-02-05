@@ -2,12 +2,9 @@ package com.sap.subsystem.vcs_repository.domain.model;
 
 import com.sap.subsystem.secret.domain.model.Secret;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Generated;
-import org.hibernate.generator.EventType;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "vcs_repository")
@@ -17,7 +14,7 @@ public class VcsRepository {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private UUID businessId;
+    private String businessId;
 
     private String repository;
 
@@ -37,11 +34,11 @@ public class VcsRepository {
         return this;
     }
 
-    public UUID getBusinessId() {
+    public String getBusinessId() {
         return businessId;
     }
 
-    public VcsRepository setBusinessId(UUID businessId) {
+    public VcsRepository setBusinessId(String businessId) {
         this.businessId = businessId;
         return this;
     }

@@ -15,5 +15,5 @@ import java.util.UUID;
 public record EditVcsRepositoryDto(
         @NotBlank(message = "Repository field must not be empty")
         String repository,
-        Set<UUID> secrets
+        Set<String> secrets
 ) {}

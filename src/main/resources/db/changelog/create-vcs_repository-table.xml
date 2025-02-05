@@ -9,7 +9,7 @@
         </preConditions>
         <createTable tableName="vcs_repository">
             <column name="id" type="bigint" autoIncrement="true" />
-            <column name="business_id" type="uuid" />
+            <column name="business_id" type="varchar(36)" />
             <column name="repository" type="text"/>
         </createTable>
         <addPrimaryKey tableName="vcs_repository" columnNames="id"/>
