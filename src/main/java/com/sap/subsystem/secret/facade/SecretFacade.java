@@ -100,7 +100,6 @@ public class SecretFacade {
                     throw new GithubException("Failed to update repository secret");
                 }
 
-                // Save/Update the secret in the database
                 final Secret secret = secretMapper.toEntity(new SecretDto(newSecret, repositoryId));
                 secretService.save(secret);
             }
