@@ -88,20 +88,26 @@ public class SecretFacade {
         final Map<String, String> storedSecrets = secretService.listAllSecrets().stream()
                 .collect(Collectors.toMap(Secret::getBusinessId, Secret::getSecret));
 
-        newSecrets.forEach(newSecret -> {
-            boolean secretExists = storedSecrets.containsKey(newSecret);
-            boolean secretChanged = !secretExists || !storedSecrets.get(newSecret).equals(newSecret);
+        storedSecrets.forEach((secretValue, secretName) -> {
+            if (!newSecrets.contains(secretValue)) {
+                githubSecretApiService.deleteSecret(repositoryName, secretName);
+                secretService.deleteSecret(secretValue);
+            }
+        });
 
-            if (secretChanged) {
-                final Secret foundSecret = secretService.getByBusinessId(newSecret);
-                final ResponseEntity<Void> gitResponse = githubSecretApiService.updateSecret(repositoryName, newSecret);
+
+        newSecrets.forEach(secret -> {
+            boolean containsValue = storedSecrets.containsValue(secret);
+
+            if (!containsValue) {
+                final ResponseEntity<Void> gitResponse = githubSecretApiService.updateSecret(repositoryName, secret);
 
                 if (gitResponse.getStatusCode() != HttpStatus.CREATED) {
                     throw new GithubException("Failed to update repository secret");
                 }
 
-                final Secret secret = secretMapper.toEntity(new SecretDto(newSecret, repositoryId));
-                secretService.save(secret);
+                final Secret entity = secretMapper.toEntity(new SecretDto(secret, repositoryId));
+                secretService.save(entity);
             }
         });
     }

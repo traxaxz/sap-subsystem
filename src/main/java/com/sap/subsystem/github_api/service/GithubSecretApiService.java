@@ -37,4 +37,8 @@ public class GithubSecretApiService {
     public GithubSecretApiResponseDto getSecrets(final String repoName) {
         return githubSecretApi.getSecrets(githubProperties.getOwner(), repoName);
     }
+
+    public ResponseEntity<Void> deleteSecret(final String repoName, final String secret){
+        return githubSecretApi.deleteSecret(githubProperties.getOwner(), repoName, secret);
+    }
 }

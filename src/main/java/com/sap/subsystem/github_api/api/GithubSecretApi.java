@@ -26,7 +26,7 @@ public interface GithubSecretApi {
             );
 
     @DeleteMapping("/repos/{owner}/{repo}/actions/secrets/{secretName}")
-    void deleteSecret(@PathVariable final String owner, @PathVariable final String repo, @PathVariable final String secretName);
+    ResponseEntity<Void> deleteSecret(@PathVariable final String owner, @PathVariable final String repo, @PathVariable final String secretName);
 
     @GetMapping("/repos/{owner}/{repo}/actions/secrets")
     GithubSecretApiResponseDto getSecrets(@PathVariable final String owner, @PathVariable final String repo);
