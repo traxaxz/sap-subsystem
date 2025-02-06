@@ -24,6 +24,6 @@ public class FeignClientConfig {
 
     @Bean
     public Client feignClient() {
-        return new OkHttpClient();  // Use OkHttp instead of default client
+        return new OkHttpClient();
     }
 }
