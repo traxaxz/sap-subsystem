@@ -15,7 +15,7 @@ public class FeignClientConfig {
 
     @Bean
     public RequestInterceptor requestInterceptor(){
-        return (RequestTemplate requestTemplate) -> {
+        return (final RequestTemplate requestTemplate) -> {
             requestTemplate.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
             requestTemplate.header(HttpHeaders.ACCEPT, "application/vnd.github+json");
             requestTemplate.header(HttpHeaders.CONTENT_TYPE, "application/json");
