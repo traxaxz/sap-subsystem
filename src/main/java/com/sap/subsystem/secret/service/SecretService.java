@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 /**
@@ -28,20 +30,15 @@ public class SecretService {
         return findByBusinessId(businessId);
     }
 
-    public List<Secret> findByBusinessIdsIn(final Set<String> secrets){
-        return secretRepository.findByBusinessIdIn(secrets);
-    }
-
-    public List<Secret> listAllSecrets(){
-        return secretRepository.findAll();
+    public List<Secret> findByBusinessIdsIn(final Set<String> secretIds){
+        return secretRepository.findByBusinessIdIn(secretIds);
     }
 
     public void save(final Secret secret){
         secretRepository.save(secret);
     }
 
-    public void deleteSecret(final String businessId){
-       final Secret secret = findByBusinessId(businessId);
+    public void deleteSecret(final Secret secret){
        secretRepository.delete(secret);
     }
 
@@ -51,12 +48,6 @@ public class SecretService {
         }
     }
 
-    public void validateForUpdate(final String businessId, final SecretDto secretDto) {
-        final Secret foundSecret = findByBusinessId(businessId);
-        if(!foundSecret.getSecret().equals(secretDto.secret())){
-            validateSecret(secretDto.secret());
-        }
-    }
 
     private void validateSecret(final String secret){
         final boolean exists = secretRepository.existsBySecret(secret);
@@ -65,9 +56,6 @@ public class SecretService {
         }
     }
 
-    private boolean existsBySecretName(final String secretName){
-        return secretRepository.existsBySecret(secretName);
-    }
 
     private Secret findByBusinessId(final String businessId){
         return secretRepository.findByBusinessId(businessId)

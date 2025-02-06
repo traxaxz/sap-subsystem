@@ -1,6 +1,6 @@
 package com.sap.subsystem.github_api.api;
 
-import com.sap.subsystem.config.GithubFeignInterceptor;
+import com.sap.subsystem.config.FeignClientConfig;
 import com.sap.subsystem.github_api.domain.dto.EncryptedSecret;
 import com.sap.subsystem.github_api.domain.dto.GithubSecretApiResponseDto;
 import com.sap.subsystem.github_api.domain.dto.PublicKeyDto;
@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name ="githubSecretApi", url = "${github.api_url}", configuration = GithubFeignInterceptor.class)
+@FeignClient(name ="githubSecretApi", url = "${github.api_url}", configuration = FeignClientConfig.class)
 public interface GithubSecretApi {
 
     @GetMapping("/repos/{owner}/{repo}/actions/secrets/public-key")

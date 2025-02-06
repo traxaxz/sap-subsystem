@@ -1,14 +1,14 @@
 package com.sap.subsystem.config;
 
+import feign.Client;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import feign.okhttp.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
 
-@Component
-public class GithubFeignInterceptor {
+public class FeignClientConfig {
 
     @Value("${github.token}")
     private String accessToken;
@@ -20,5 +20,10 @@ public class GithubFeignInterceptor {
             requestTemplate.header(HttpHeaders.ACCEPT, "application/vnd.github+json");
             requestTemplate.header(HttpHeaders.CONTENT_TYPE, "application/json");
         };
+    }
+
+    @Bean
+    public Client feignClient() {
+        return new OkHttpClient();  // Use OkHttp instead of default client
     }
 }

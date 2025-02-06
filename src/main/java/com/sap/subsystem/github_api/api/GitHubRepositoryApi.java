@@ -1,14 +1,13 @@
 package com.sap.subsystem.github_api.api;
 
-import com.sap.subsystem.config.GithubFeignInterceptor;
-
+import com.sap.subsystem.config.FeignClientConfig;
 import com.sap.subsystem.github_api.domain.dto.GithubRepositoryApiRequestDto;
 import com.sap.subsystem.github_api.domain.dto.GithubRepositoryApiResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name ="githubRepoApi", url = "${github.api_url}", configuration = GithubFeignInterceptor.class)
+@FeignClient(name ="githubRepoApi", url = "${github.api_url}", configuration = FeignClientConfig.class)
 public interface GitHubRepositoryApi {
 
     @PostMapping("/user/repos")

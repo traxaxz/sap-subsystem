@@ -19,24 +19,9 @@ public class SecretController {
         this.secretFacade = secretFacade;
     }
 
-    @GetMapping("/{id}")
-    public SecretView getSecretById(@PathVariable final String id) {
-        return secretFacade.getByBusinessId(id);
-    }
-
-    @GetMapping
-    public List<SecretView> listAllSecrets() {
-        return secretFacade.listAllSecrets();
-    }
-
     @PostMapping
     public void createSecret(@RequestBody @Valid final SecretDto secretDto){
         secretFacade.createSecret(secretDto);
-    }
-
-    @PutMapping("/{id}")
-    public void updateSecret(@PathVariable final String id, @RequestBody @Valid final SecretDto secretDto) {
-        secretFacade.updateSecret(id, secretDto);
     }
 
     @DeleteMapping("/{id}")

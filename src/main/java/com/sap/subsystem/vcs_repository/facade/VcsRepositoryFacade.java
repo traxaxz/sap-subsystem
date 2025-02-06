@@ -51,10 +51,6 @@ public class VcsRepositoryFacade {
         if(!vcsRepositoryDto.repository().equals(vcsRepositoryForUpdate.getRepository())){
             validateRepository(vcsRepositoryDto.repository());
         }
-        if(!vcsRepositoryDto.secrets().isEmpty()){
-            secretFacade.updateSecrets(vcsRepositoryForUpdate.getRepository(), businessId, vcsRepositoryDto.secrets());
-        }
-
         final GithubRepositoryApiResponseDto updatedRepository = githubRepositoryApiService.updateRepository(vcsRepositoryForUpdate.getRepository(), vcsRepositoryDto);
         final VcsRepository vcsRepository = vcsRepositoryMapper.toEntity(updatedRepository);
 
